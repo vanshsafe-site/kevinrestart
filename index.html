@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>K.E.V.I.N - Mental Health AI</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #0a0a0a;
+    color: white;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  header {
+    background-color: #0d0d0d;
+    padding: 20px;
+    text-align: center;
+    border-bottom: 2px solid #0ff;
+    box-shadow: 0 0 20px #0ff;
+  }
+
+  header img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 2px solid #0ff;
+    box-shadow: 0 0 15px #0ff;
+  }
+
+  header h1 {
+    margin: 10px 0 5px;
+    font-size: 2rem;
+    color: #0ff;
+  }
+
+  header p {
+    color: #88ffff;
+    font-size: 1.1rem;
+  }
+
+  main {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+
+  /* Chat container */
+  #chatbot-container {
+    width: 100%;
+    max-width: 600px;
+    height: 80vh;
+    background-color: #111;
+    border-radius: 15px;
+    box-shadow: 0 0 25px #0ff;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* Chat header */
+  #chatbot-header {
+    background-color: #0d0d0d;
+    color: #0ff;
+    padding: 15px;
+    font-size: 18px;
+    border-bottom: 1px solid #0ff;
+    box-shadow: 0 0 10px #0ff;
+    text-align: center;
+  }
+
+  /* Chat messages area */
+  #chatbot-body {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+  }
+
+  .message {
+    margin-bottom: 15px;
+    padding: 12px;
+    border-radius: 8px;
+    max-width: 85%;
+    word-wrap: break-word;
+  }
+
+  .message.user {
+    background-color: #0ff;
+    color: #000;
+    align-self: flex-end;
+    box-shadow: 0 0 10px #0ff;
+  }
+
+  .message.bot {
+    background-color: #1a1a1a;
+    color: #0ff;
+    align-self: flex-start;
+    box-shadow: 0 0 10px #0ff;
+  }
+
+  /* Input area */
+  #chatbot-input-container {
+    display: flex;
+    padding: 10px;
+    border-top: 1px solid #0ff;
+    background-color: #0d0d0d;
+  }
+
+  #chatbot-input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #0ff;
+    border-radius: 10px;
+    background-color: #000;
+    color: white;
+    outline: none;
+    box-shadow: 0 0 8px #0ff;
+  }
+
+  #send-btn, #mic-btn {
+    margin-left: 10px;
+    padding: 10px 15px;
+    background-color: #0ff;
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    box-shadow: 0 0 10px #0ff;
+    transition: 0.2s;
+  }
+
+  #send-btn:hover, #mic-btn:hover {
+    background-color: #00cccc;
+  }
+
+</style>
+</head>
+<body>
+
+<header>
+  <img src="profile-pic.png" alt="K.E.V.I.N Logo" />
+  <h1>K.E.V.I.N</h1>
+  <p>Your Neon-Blue Mental Health Support AI</p>
+</header>
+
+<main>
+  <div id="chatbot-container">
+    <div id="chatbot-header">K.E.V.I.N - Always here for you</div>
+    <div id="chatbot-body">
+      <div id="chatbot-messages"></div>
+    </div>
+    <div id="chatbot-input-container">
+      <input type="text" id="chatbot-input" placeholder="Type or speak your thoughts..." />
+      <button id="mic-btn">🎤</button>
+      <button id="send-btn">Send</button>
+    </div>
+  </div>
+</main>
+
+<script>
+  const chatbotMessages = document.getElementById("chatbot-messages");
+  const chatbotInput = document.getElementById("chatbot-input");
+  const sendBtn = document.getElementById("send-btn");
+  const micBtn = document.getElementById("mic-btn");
+
+  sendBtn.addEventListener("click", sendMessage);
+  chatbotInput.addEventListener("keypress", e => {
+    if (e.key === "Enter") sendMessage();
+  });
+
+  // Voice input
+  micBtn.addEventListener("click", () => {
+    if (!('webkitSpeechRecognition' in window)) {
+      alert("Speech recognition not supported in this browser.");
+      return;
+    }
+    const recognition = new webkitSpeechRecognition();
+    recognition.lang = "en-US";
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+    recognition.start();
+    micBtn.textContent = "🎙️ Listening...";
+    recognition.onresult = (event) => {
+      chatbotInput.value = event.results[0][0].transcript;
+      micBtn.textContent = "🎤";
+    };
+    recognition.onerror = () => {
+      micBtn.textContent = "🎤";
+    };
+    recognition.onend = () => {
+      micBtn.textContent = "🎤";
+    };
+  });
+
+  function appendMessage(sender, text) {
+    const messageElement = document.createElement("div");
+    messageElement.classList.add("message", sender);
+    messageElement.textContent = text;
+    chatbotMessages.appendChild(messageElement);
+    chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+  }
+
+  async function sendMessage() {
+    const userMessage = chatbotInput.value.trim();
+    if (!userMessage) return;
+    appendMessage("user", userMessage);
+    chatbotInput.value = "";
+    await getBotResponse(userMessage);
+  }
+
+  async function getBotResponse(userMessage) {
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: userMessage })
+      });
+
+      const data = await response.json();
+      if (data.error) throw new Error(data.error);
+
+      appendMessage("bot", data.reply);
+      speakText(data.reply);
+    } catch (err) {
+      appendMessage("bot", "Sorry, I’m having trouble responding right now.");
+    }
+  }
+
+  // Voice output using browser TTS
+  function speakText(text) {
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.voice = speechSynthesis.getVoices().find(v => v.lang === "en-US") || null;
+    utterance.pitch = 1;
+    utterance.rate = 1;
+    utterance.volume = 1;
+    speechSynthesis.speak(utterance);
+  }
+</script>
+
+</body>
+</html>
