@@ -412,6 +412,28 @@
   @keyframes spin {
     to { transform: rotate(360deg); }
   }
+  @media (max-width: 500px) {
+  .mood-selector {
+    display: none;
+  }
+}
+@media (max-width: 500px) {
+  #chatbot-input-container {
+    flex-wrap: wrap;        /* allow items to wrap onto next line */
+    gap: 8px;               /* space between items */
+  }
+
+  #chatbot-input {
+    flex: 1 1 auto;         /* input takes remaining space */
+    min-width: 150px;       /* prevent too small input */
+  }
+
+  #mic-btn,
+  #send-btn {
+    flex: 0 0 80px;         /* fixed width */
+  }
+}
+
 </style>
 </head>
 <body>
@@ -459,6 +481,7 @@
 
     <div id="chatbot-input-container">
       <input type="text" id="chatbot-input" placeholder="Share your thoughts or feelings..." />
+      
       <button class="btn" id="mic-btn" title="Voice input">🎤</button>
       <button class="btn" id="send-btn" title="Send message">
         <span>Send</span>
