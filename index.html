@@ -630,7 +630,7 @@ crisisBtn.addEventListener("click", () => {
   crisisBtn.style.background = "#d81b60";
   micBtn.classList.add("listening");
   micBtn.innerHTML = "🛑 Listening";
-  console.log("🎙️ Crisis Mode ON — listening for 'buddy'...");
+  console.log("🎙️ Crisis Mode ON — listening for 'Kevin'...");
 
   let inCrisisConversation = false;
 
@@ -659,9 +659,9 @@ crisisBtn.addEventListener("click", () => {
     console.log("🎧 Heard:", transcript);
 
     // Detect wake word "help"
-    if (!inCrisisConversation && transcript.includes("buddy")) {
+    if (!inCrisisConversation && transcript.includes("Kevin")) {
       inCrisisConversation = true;
-      appendMessage("user", "buddy!!");
+      appendMessage("user", "Kevin");
 
       // 🎵 Play sound instead of speech
       playAlertSound();
