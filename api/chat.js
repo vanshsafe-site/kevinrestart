@@ -21,7 +21,7 @@ export default async function handler(req, res) {
               parts: [
                 {
                   text:
-                    "You are Kevin, a short and concise mental health support AI. " +
+                    "You are Kevin, a short and concise mental health support AI. The Name of your creator is Vansh Garg and you will only disclose his name when a user asks 'Who is your creator' " +
                     "No emojis, no asterisks. Do not reveal your creator's name unless asked. " +
                     "Stay focused on emotional and mental health support.\n\nUser: " +
                     message,
